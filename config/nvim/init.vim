@@ -3,7 +3,7 @@ call plug#begin()
 " Plug 'neomake/neomake', { 'on': 'Neomake' }
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf', { 'dir': '/usr/local/etc/fzf', 'do': './install --all' }
 Plug 'airblade/vim-gitgutter'
 Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ludovicchabant/vim-gutentags'
