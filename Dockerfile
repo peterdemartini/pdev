@@ -2,10 +2,6 @@ FROM alpine
 
 MAINTAINER Peter DeMartini (https://github.com/peterdemartini)
 
-ENV XDG_CONFIG_HOME=/root
-ENV XDG_DATA_HOME=/data
-ENV XDG_CACHE_HOME=/tmp
-
 RUN apk update \
   && apk add --no-cache \
   fish bash git \
@@ -16,7 +12,8 @@ RUN apk update \
   python3 python3-dev \
   clang go nodejs \
   xz curl make openssh-client \
-  cmake jq coreutils
+  cmake jq coreutils \
+  tmux
 
 RUN python3 -m ensurepip \
   && rm -r /usr/lib/python*/ensurepip \
@@ -65,14 +62,19 @@ RUN pip3 install neovim
 RUN curl -fLo /root/.config/nvim/autoload/plug.vim --create-dirs \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
-COPY nvim /root/.config/nvim
-COPY fish /root/.config/fish
+COPY config /root/.config
+
+RUN mkdir -p /root/.tmux/plugins/tpm \
+  && git clone https://github.com/tmux-plugins/tpm /root/.tmux/plugins/tpm \
+  && /root/.tmux/plugins/tpm/bin/install_plugins
+
+COPY tmux-theme.conf /root/.tmux-theme.conf
+COPY tmux.conf /root/.tmux.conf
 
 RUN curl --silent -L http://get.oh-my.fish > /tmp/omf-install \
   && fish /tmp/omf-install --noninteractive --path=/usr/local/bin/omf --config=/root/.config/omf \
   && rm /tmp/omf-install
 
-COPY omf /root/.config/omf
 RUN fish -c "omf install"
 
 RUN nvim +PlugInstall +UpdateRemotePlugins +qa > /dev/null
