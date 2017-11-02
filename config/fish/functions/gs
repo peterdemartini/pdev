@@ -1,0 +1,2 @@
+function gs
+	git status --short
