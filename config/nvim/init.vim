@@ -1,13 +1,11 @@
 call plug#begin()
-function! DoRemote(arg)
-  UpdateRemotePlugins
-endfunction
+
 " Plug 'neomake/neomake', { 'on': 'Neomake' }
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-fugitive'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'airblade/vim-gitgutter'
-Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'Yggdroot/indentLine'
 
@@ -20,6 +18,8 @@ Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 
 call plug#end()
+
+let g:python3_host_prog = '/usr/bin/python3'
 
 let g:airline#extensions#tabline#enabled = 1
 

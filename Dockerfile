@@ -17,7 +17,10 @@ RUN apk update \
   clang go nodejs \
   xz curl make openssh-client \
   cmake jq coreutils \
-  ctags tmux
+  ctags tmux \
+  ruby
+
+RUN echo 'gem: --no-document' > /etc/gemrc
 
 RUN python3 -m ensurepip \
   && rm -r /usr/lib/python*/ensurepip \
@@ -65,7 +68,7 @@ RUN curl --silent -L https://github.com/neovim/neovim/archive/nightly.tar.gz | t
 
 RUN pip3 install neovim
 
-RUN curl -fLo $XDG_CONFIG_HOME/nvim/autoload/plug.vim --create-dirs \
+RUN curl --silent -fLo $XDG_CONFIG_HOME/nvim/autoload/plug.vim --create-dirs \
   https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 COPY config $XDG_CONFIG_HOME
@@ -90,5 +93,7 @@ RUN nvim +PlugInstall +qa > /dev/null
 RUN env NPM_CONFIG_LOGLEVEL=error npm install --silent --global eslint prettier && npm cache --force clean
 
 WORKDIR /data
+
+RUN chmod -R 777 /usr/local
 
 CMD [ "/usr/bin/fish" ]
