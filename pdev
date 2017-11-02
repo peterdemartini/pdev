@@ -1,0 +1,11 @@
+#!/bin/bash
+
+main() {
+  docker run \
+    -it \
+    --rm \
+    --volume "$PWD":/data \
+    local/pdev
+}
+
+main "$@"

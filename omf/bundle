@@ -1,9 +1,6 @@
 package bang-bang
 package foreign-env
 package title
-package https://github.com/iamruinous/plugin-envious
-package https://github.com/iamruinous/plugin-yarn-binpath
-package https://github.com/iamruinous/plugin-home-binpath
 package https://github.com/peterdemartini/plugin-go-binpath
 theme eden
 theme clearance

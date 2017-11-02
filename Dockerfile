@@ -1,47 +1,82 @@
-FROM ubuntu:17.04
-MAINTAINER Peter DeMartini <thepeterdemartini@gmail.com>
+FROM alpine
 
+MAINTAINER Peter DeMartini (https://github.com/peterdemartini)
+
+ENV XDG_CONFIG_HOME=/root
+ENV XDG_DATA_HOME=/data
+ENV XDG_CACHE_HOME=/tmp
+
+RUN apk update \
+  && apk add --no-cache \
+  fish bash git \
+  alpine-sdk build-base\
+  libtool automake m4 \
+  autoconf linux-headers unzip \
+  ncurses ncurses-dev ncurses-libs ncurses-terminfo \
+  python3 python3-dev \
+  clang go nodejs \
+  xz curl make openssh-client \
+  cmake jq coreutils
+
+RUN python3 -m ensurepip \
+  && rm -r /usr/lib/python*/ensurepip \
+  && pip3 install --upgrade pip setuptools \
+  && rm -rf $XDG_CACHE_HOME
+
+RUN sed -i -e "s/bin\/ash/usr\/bin\/fish/" /etc/passwd
+
+ENV SHELL /usr/bin/fish
+ENV CMAKE_EXTRA_FLAGS=-DENABLE_JEMALLOC=OFF
 ENV LANGUAGE=en_US.UTF-8
 ENV LANG=en_US.UTF-8
-RUN apt-get update && apt-get install -y locales && locale-gen en_US.UTF-8
 
-RUN apt-get update && \
-  apt-get install -y \
-  build-essential software-properties-common \
-  wget curl git unzip \
-  netcat-openbsd openssh-client \
-  iputils-ping jq libncurses5-dev \
-  libevent-dev net-tools \
-  libtool libtool-bin \
-  groff util-linux bc coreutils \
-  g++ pkg-config cmake automake autoconf
+COPY xterm-256color-italic.terminfo /root
+RUN tic /root/xterm-256color-italic.terminfo
+ENV TERM xterm-256color-italic
 
-RUN apt-get update && apt-get install -y \
-      rubygems ruby-dev \
-      silversearcher-ag socat tmux \
-      fish bash neovim \
-      python3 python3-pip
+WORKDIR /tmp
 
-RUN chsh -s /usr/bin/fish
-RUN curl --silent -L http://get.oh-my.fish > /tmp/install \
-  && fish /tmp/install --noninteractive \
-  && rm /tmp/install
-COPY omf "$HOME/.config/omf"
+RUN git clone https://github.com/neovim/libtermkey.git && \
+  cd libtermkey && \
+  make && \
+  make install && \
+  cd ../ && rm -rf libtermkey
+
+RUN git clone https://github.com/neovim/libvterm.git && \
+  cd libvterm && \
+  make && \
+  make install && \
+  cd ../ && rm -rf libvterm
+
+RUN git clone https://github.com/neovim/unibilium.git && \
+  cd unibilium && \
+  make && \
+  make install && \
+  cd ../ && rm -rf unibilium
+
+RUN curl -L https://github.com/neovim/neovim/archive/nightly.tar.gz | tar xz && \
+  cd neovim-nightly && \
+  make && \
+  make install && \
+  cd ../ && rm -rf neovim-nightly
+
+RUN pip3 install neovim
+
+RUN curl -fLo /root/.config/nvim/autoload/plug.vim --create-dirs \
+  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+
+COPY nvim /root/.config/nvim
+COPY fish /root/.config/fish
+
+RUN curl --silent -L http://get.oh-my.fish > /tmp/omf-install \
+  && fish /tmp/omf-install --noninteractive --path=/usr/local/bin/omf --config=/root/.config/omf \
+  && rm /tmp/omf-install
+
+COPY omf /root/.config/omf
 RUN fish -c "omf install"
 
-COPY nvim "$HOME/.config/nvim"
+RUN nvim +PlugInstall +UpdateRemotePlugins +qa > /dev/null
 
-COPY tmux .
-RUN git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+WORKDIR /data
 
-ENV DOCKER_VERSION 17.09.0-ce
-ENV DOCKER_MACHINE_VERSION 0.12.2
-
-RUN curl -fsSLO "https://github.com/docker/machine/releases/download/v$DOCKER_MACHINE_VERSION/docker-machine-Linux-x86_64" \
-  && mv docker-machine-Linux-x86_64 /usr/local/bin/docker-machine \
-  && chmod +x /usr/local/bin/docker-machine
-
-RUN curl -fsSLO "https://download.docker.com/linux/static/stable/x86_64/docker-$DOCKER_VERSION.tgz" \
-  && tar --strip-components=1 -xvzf "docker-$DOCKER_VERSION.tgz" -C /usr/local/bin \
-  && chmod +x /usr/local/bin/docker \
-  && rm "docker-$DOCKER_VERSION.tgz"
+CMD [ "/usr/bin/fish" ]
