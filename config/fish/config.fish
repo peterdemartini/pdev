@@ -1,4 +1,4 @@
-. /usr/local/etc/fish/aliases.fish
+. ~/.config/fish/aliases.fish
 
 set -x TERM xterm-256color-italic
 

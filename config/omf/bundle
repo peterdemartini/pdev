@@ -1,7 +1,6 @@
 package bang-bang
 package foreign-env
 package title
-package https://github.com/peterdemartini/plugin-go-binpath
 theme eden
 theme clearance
 theme default

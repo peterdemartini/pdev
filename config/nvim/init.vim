@@ -1,13 +1,37 @@
-call plug#begin()
+if has("unix")
+  let s:uname = system("uname")
+  let g:python_host_prog = '/usr/bin/python2'
+  let g:python3_host_prog = '/usr/bin/python3'
+  if s:uname == "Darwin\n"
+    let g:python_host_prog='/usr/bin/python'
+    let g:python2_host_prog='/usr/bin/python2'
+    let g:python3_host_prog = '/usr/bin/python3'
+  endif
+endif
 
+" Install Vim Plug if not installed
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
+
+call plug#begin()
+function! DoRemote(arg)
+  UpdateRemotePlugins
+endfunction
 " Plug 'neomake/neomake', { 'on': 'Neomake' }
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-fugitive'
-Plug 'junegunn/fzf', { 'dir': '/usr/local/etc/fzf', 'do': './install --all' }
+Plug 'tpope/vim-surround'
+Plug 'tomtom/tcomment_vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'Yggdroot/indentLine'
+Plug 'dbakker/vim-projectroot'
 
 "Javascript Plugins
 Plug 'sheerun/vim-polyglot'
@@ -18,8 +42,6 @@ Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 
 call plug#end()
-
-let g:python3_host_prog = '/usr/bin/python3'
 
 let g:airline#extensions#tabline#enabled = 1
 
@@ -62,6 +84,10 @@ endif
 " Search and Replace
 nmap <Leader>s :%s//g<Left><Left>
 
+nmap <Leader>t :Files<CR>
+nmap <Leader>r :BTags<CR>
+nmap <Leader>/ :TComment<CR>
+
 set showmatch           " Show matching brackets.
 set number              " Show the line numbers on the left side.
 set formatoptions+=o    " Continue comment marker in new lines.
@@ -85,5 +111,10 @@ set sidescrolloff=5   " Show next 5 columns while side-scrolling.
 endif
 set nostartofline       " Do not jump to first character with page commands.
 
+
 let g:netrw_banner = 0
 let g:netrw_browse_split = 3
+let g:gutentags_generate_on_new = 1
+let g:gutentags_project_root_finder = 'ProjectRootGuess'
+let g:gutentags_ctags_tagfile = '.tags'
+set tags=./.tags;./tags
