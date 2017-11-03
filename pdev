@@ -5,7 +5,7 @@ main() {
     -it \
     --rm \
     --volume "$PWD":/workdir \
-    --volume ~/.ssh:/root/.ssh \
+    --volume ~/.ssh:/usr/local/share/ssh \
     local/pdev "$@"
 }
 

@@ -1,6 +1,5 @@
 package bang-bang
 package foreign-env
 package title
-package https://github.com/iamruinous/plugin-yarn-binpath
 theme clearance
 theme default

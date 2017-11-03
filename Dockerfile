@@ -12,7 +12,8 @@ RUN apk add --update-cache --virtual build-deps --no-cache \
     ncurses ncurses-dev ncurses-libs ncurses-terminfo \
     linux-headers lua5.3-dev lua-sec \
     m4 make unzip ctags \
-    alpine-sdk build-base
+    alpine-sdk build-base \
+    openssh-client
 
 RUN apk add --update-cache \
     git fish bash less \
@@ -75,7 +76,10 @@ RUN pip3 install neovim
 #   make install prefix=/usr/local && \
 #   cd ../ && rm -rf hub
 
-COPY config $XDG_CONFIG_HOME
+COPY config/fish $XDG_CONFIG_HOME/fish
+COPY config/nvim $XDG_CONFIG_HOME/nvim
+COPY config/omf $XDG_CONFIG_HOME/omf
+COPY ssh $HOME/.ssh
 COPY gitconfig $HOME/.gitconfig
 COPY gitignore_global $HOME/.gitignore_global
 COPY xterm-256color-italic.terminfo $XDG_CONFIG_HOME/xterm-256color-italic.terminfo
@@ -92,6 +96,7 @@ ENV GOPATH $XDG_DATA_HOME/go
 ENV GOBIN $XDG_DATA_HOME/go/bin
 ENV PATH "$PATH:$GOBIN"
 
+RUN ssh-keyscan github.com > $HOME/.ssh/known_hosts
 RUN tic $XDG_CONFIG_HOME/xterm-256color-italic.terminfo
 
 RUN git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm \
