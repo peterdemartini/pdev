@@ -32,6 +32,7 @@ Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'Yggdroot/indentLine'
 Plug 'dbakker/vim-projectroot'
+Plug 'gosukiwi/vim-atom-dark'
 
 "Javascript Plugins
 Plug 'sheerun/vim-polyglot'
@@ -111,10 +112,14 @@ set sidescrolloff=5   " Show next 5 columns while side-scrolling.
 endif
 set nostartofline       " Do not jump to first character with page commands.
 
-
 let g:netrw_banner = 0
 let g:netrw_browse_split = 3
+let g:netrw_liststyle = 3
+let g:netrw_altv = 1
+let g:netrw_winsize = 30
 let g:gutentags_generate_on_new = 1
 let g:gutentags_project_root_finder = 'ProjectRootGuess'
 let g:gutentags_ctags_tagfile = '.tags'
 set tags=./.tags;./tags
+
+colorscheme atom-dark

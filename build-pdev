@@ -1,0 +1,7 @@
+#!/bin/bash
+
+main() {
+  docker build -t local/pdev .
+}
+
+main "$@"
