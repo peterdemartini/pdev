@@ -4,7 +4,8 @@ main() {
   docker run \
     -it \
     --rm \
-    --volume "$PWD:/home/pdev/project" \
+    --volume "$PWD":/workdir \
+    --volume ~/.ssh:/root/.ssh \
     local/pdev "$@"
 }
 

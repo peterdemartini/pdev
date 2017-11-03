@@ -1,17 +1,9 @@
-if has("unix")
-  let s:uname = system("uname")
-  let g:python_host_prog = '/usr/bin/python2'
-  let g:python3_host_prog = '/usr/bin/python3'
-  if s:uname == "Darwin\n"
-    let g:python_host_prog='/usr/bin/python'
-    let g:python2_host_prog='/usr/bin/python2'
-    let g:python3_host_prog = '/usr/bin/python3'
-  endif
-endif
+let g:python3_host_prog = '/usr/bin/python3'
+let g:python2_host_prog = '/usr/bin/python2'
 
 " Install Vim Plug if not installed
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+if empty(glob('/usr/local/etc/nvim/autoload/plug.vim'))
+  silent !curl -fLo /usr/local/etc/nvim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall
 endif
@@ -21,6 +13,9 @@ function! DoRemote(arg)
   UpdateRemotePlugins
 endfunction
 " Plug 'neomake/neomake', { 'on': 'Neomake' }
+Plug 'dikiaap/minimalist'
+Plug 'scrooloose/nerdtree'
+Plug 'Nopik/vim-nerdtree-direnter'
 Plug 'vim-airline/vim-airline'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
@@ -32,7 +27,6 @@ Plug 'Shougo/deoplete.nvim', { 'do': function('DoRemote') }
 Plug 'ludovicchabant/vim-gutentags'
 Plug 'Yggdroot/indentLine'
 Plug 'dbakker/vim-projectroot'
-Plug 'gosukiwi/vim-atom-dark'
 
 "Javascript Plugins
 Plug 'sheerun/vim-polyglot'
@@ -42,6 +36,8 @@ Plug 'w0rp/ale'
 Plug 'Shougo/neosnippet'
 Plug 'Shougo/neosnippet-snippets'
 
+" Load Last
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 let g:airline#extensions#tabline#enabled = 1
@@ -121,5 +117,10 @@ let g:gutentags_generate_on_new = 1
 let g:gutentags_project_root_finder = 'ProjectRootGuess'
 let g:gutentags_ctags_tagfile = '.tags'
 set tags=./.tags;./tags
+set tags=./.tags;./tags
 
-colorscheme atom-dark
+set encoding=utf8
+set guifont=FuraCode\ Nerd\ Font\ 18
+let NERDTreeMapOpenInTab='<ENTER>'
+
+colorscheme minimalist

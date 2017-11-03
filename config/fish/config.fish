@@ -1,5 +1,3 @@
-. ~/.config/fish/aliases.fish
-
 set -x TERM xterm-256color-italic
 
 set -x GREP_OPTIONS '--color=auto'
