@@ -1,6 +1,0 @@
-#!/bin/bash
-
-main(){
-  awk '{print $1}'
-}
-main $@
