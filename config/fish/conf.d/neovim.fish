@@ -1,3 +1,3 @@
-alias vim="/usr/local/bin/nvim"
-alias vi="/usr/local/bin/nvim"
+alias vim="/usr/bin/nvim"
+alias vi="/usr/bin/nvim"
 alias oldvim="/usr/bin/vim"

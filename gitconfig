@@ -4,7 +4,7 @@
 [core]
 	email = thepeterdemartini@gmail.com
 	user = Peter DeMartini
-	editor = /usr/local/bin/nvim
+	editor = /usr/bin/nvim
   autocrlf = input
 	excludesfile = ~/.gitignore_global
 [alias]

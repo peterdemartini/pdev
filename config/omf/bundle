@@ -1,5 +1,6 @@
 package bang-bang
 package foreign-env
 package title
+package hub
 theme clearance
 theme default
