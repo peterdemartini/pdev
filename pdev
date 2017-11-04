@@ -6,7 +6,7 @@ main() {
     --rm \
     --volume "$PWD":/workdir \
     --volume ~/.ssh/id_rsa:/root/.ssh/id_rsa \
-    local/pdev "$@"
+    peterdemartini/pdev "$@"
 }
 
 main "$@"
