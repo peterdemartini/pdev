@@ -1,4 +1,4 @@
-FROM alpine
+FROM alpine:edge
 MAINTAINER Peter DeMartini (https://github.com/peterdemartini)
 
 ENV HOME /root
@@ -17,8 +17,8 @@ RUN apk add --update-cache --virtual build-deps --no-cache \
 
 RUN apk add --update-cache \
     git fish bash less \
-    unibilium clang \
-    nodejs tmux go
+    unibilium clang go \
+    nodejs nodejs-npm tmux
 
 RUN apk add --update-cache \
     python \
