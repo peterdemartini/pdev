@@ -13,12 +13,14 @@ RUN apk add --update-cache --virtual build-deps --no-cache \
     linux-headers lua5.3-dev lua-sec \
     m4 make unzip ctags \
     alpine-sdk build-base \
-    openssh-client
+    unibilium openssh-client
 
 RUN apk add --update-cache \
+    --repository http://dl-cdn.alpinelinux.org/alpine/edge/community/ \
     git fish bash less \
-    unibilium clang go \
-    nodejs nodejs-npm tmux
+    clang go \
+    nodejs tmux yarn \
+    docker
 
 RUN apk add --update-cache \
     python \
@@ -40,10 +42,9 @@ ENV CMAKE_EXTRA_FLAGS=-DENABLE_JEMALLOC=OFF
 
 WORKDIR /tmp
 
-RUN git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git && \
-  cd nerd-fonts && \
-  ./install.sh FiraCode && \
-  cd ../ && rm -rf nerd-fonts
+RUN mkdir -p $HOME/.local/share/fonts \
+  && cd $HOME/.local/share/fonts \
+  && curl --silent -fLo "Fura Code Regular Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/FiraCode/Regular/complete/Fura%20Code%20Regular%20Nerd%20Font%20Complete.otf
 
 RUN git clone https://github.com/neovim/libtermkey.git && \
   cd libtermkey && \
@@ -71,10 +72,10 @@ RUN curl --silent -L https://github.com/neovim/neovim/archive/nightly.tar.gz | t
 
 RUN pip3 install neovim
 
-# RUN git clone https://github.com/github/hub.git && \
-#   cd hub && \
-#   make install prefix=/usr/local && \
-#   cd ../ && rm -rf hub
+RUN git clone https://github.com/github/hub.git && \
+  cd hub && \
+  make install prefix=/usr/local && \
+  cd ../ && rm -rf hub
 
 COPY config/fish $XDG_CONFIG_HOME/fish
 COPY config/nvim $XDG_CONFIG_HOME/nvim
@@ -105,9 +106,7 @@ RUN git clone https://github.com/tmux-plugins/tpm $HOME/.tmux/plugins/tpm \
 RUN nvim -i NONE -c PlugInstall -c quitall > /dev/null 2>&1
 RUN nvim -i NONE -c UpdateRemotePlugins -c quitall > /dev/null 2>&1
 
-RUN npm install --silent \
-  --global eslint prettier yarn \
-  && npm cache clean
+RUN yarn global add eslint prettier && yarn cache clean
 
 RUN curl --silent -L http://get.oh-my.fish > /tmp/omf-install \
   && fish /tmp/omf-install --noninteractive --path=/usr/local/bin/omf --config=$XDG_CONFIG_HOME/omf \
