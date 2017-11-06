@@ -1,12 +1,15 @@
 #!/bin/bash
 
 main() {
-  docker run \
-    -it \
-    --rm \
-    --volume "$PWD":/workdir \
-    --volume ~/.ssh/id_rsa:/root/.ssh/id_rsa \
-    local/pdev "$@"
+  mkdir -p ~/tmp \
+    && touch ~/tmp/pdev_fish_history \
+    && docker run \
+      -it \
+      --rm \
+      --volume ~/tmp/pdev_fish_history:/usr/share/fish_history \
+      --volume "$PWD":/workdir \
+      --volume ~/.ssh/id_rsa:/root/.ssh/id_rsa \
+      local/pdev "$@"
 }
 
 main "$@"
